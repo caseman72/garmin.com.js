@@ -23,7 +23,8 @@
 		var units = distance.length > 1 ? distance[1].trim() : "";
 
 		// 50 or less use 2 digits, else round to int
-		distance = parseFloat(distance[0].trim().replace(/[^0-9.]+/g, ""));
+		distance = distance[0].trim().replace(/[^0-9.]+/g, "");
+		distance = distance ? parseFloat(distance) : 0;
 
 		return {
 			value: distance < 50 ? distance.toFixed(2) : Math.round(distance),
@@ -44,15 +45,21 @@
 
 	var get_time = function() {
 		var time_table = $("#timeSummary");
-		var time = time_table.find("td:contains('Time:'):first").next("td").text().trim().split(":");
-		var moving_time = time_table.find("td:contains('Moving Time:'):first").next("td").text().trim().split(":");
+		var time = time_table.find("td:contains('Time:'):first").next("td").text().trim();
+
+		// Use summary time if no time in time_table
+		if (!time) {
+			time = $("td.summaryTableLabel:first").next("td").text().trim();
+		}
 
 		// use moving time if there
-		if (moving_time.length > 1) {
+		var moving_time = time_table.find("td:contains('Moving Time:'):first").next("td").text().trim();
+		if (moving_time) {
 			time = moving_time;
 		}
 
 		// make sure we have 3 values
+		time = time.split(":");
 		while (time.length < 3) {
 			time.unshift("");
 		}
@@ -60,8 +67,8 @@
 		// hh_mm_ss
 		return {
 			hh: +time[0] ? time[0] : "",
-			mm: +time[1] ? time[1] : "",
-			ss: +time[2] ? time[2] : ""
+			mm: +time[0] || +time[1] ? time[1] : "",
+			ss: +time[1] || +time[2] ? time[2] : ""
 		};
 	};
 
