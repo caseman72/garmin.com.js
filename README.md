@@ -4,7 +4,7 @@ garmin.com.js
 ### Installation
 
 1. Save to CRX to computer
-  1. https://github.com/caseman72/garmin.com.js/blob/master/extension/garmin.com.js.crx
+  1. https://github.com/caseman72/garmin.com.js/raw/master/extension/garmin.com.js.crx
   2. "Right Click" and select a variation of "Save As..."
   3. Save to "Desktop"
 
