@@ -36,7 +36,7 @@ $(function() {
 
 				// reset on each call
 				$.globals.id_to_object = {};
-				
+
 				// else
 				$rsp.find("select[onchange^='selectMore']").each(function(i_not_used, select) {
 					var $attr = $(select).attr("onchange");
@@ -53,9 +53,24 @@ $(function() {
 					var parts = /http:\/\/connect.garmin.com\/activity\/[0-9]+/.exec(comments);
 					if (parts) { url = parts[0]; }
 
+					// workout log activity
+					var wol_act = $rsp.find("select[name='WorkoutTypeID_{0}']".format(id));
+
+					// make hash of activity_to_id ~ everyone is different
+					var activity_to_id = {};
+					wol_act.find("option").each(function(i_not_used, option) {
+						var $option = $(option);
+						var id = "{0}".format($option.val()).trim();
+						if (id) {
+							activity_to_id["{0}".format($option.text()).trim()] = id;
+						}
+					});
+
 					$.globals.id_to_object[id] = {
+						id: id,
 						url: url,
-						activity: "{0}".format($rsp.find("select[name='WorkoutTypeID_{0}']".format(id)).val()),
+						activity: "{0}".format(wol_act.val()),
+						to_id: activity_to_id,
 						date_string: date_string
 					}
 				});
@@ -76,26 +91,26 @@ $(function() {
 		var garmin_activity = $.hash_get($.globals.label_to_activity, $.globals.garmin.activity, "");
 		var garmin_url = "{0}".format(window.location.href);
 
-		var id = "Not Found";
-		$.each($.globals.id_to_object, function(wol_id, obj) {
+		var activity = "Not Found";
+		$.each($.globals.id_to_object, function(wol_id_not_used, obj) {
 			var wol_date = $.hash_get(obj, "date_string", "");
 			var wol_act = $.hash_get(obj, "activity", "");
 			var wol_url = $.hash_get(obj, "url", "");
 
 			// MUST workoutlog date matches our date ... and
-			if (wol_date === garmin_date_string && 
+			if (wol_date === garmin_date_string &&
 					(!wol_act || (wol_url && wol_url === garmin_url) || (wol_act && wol_act === garmin_activity))) {
 					// no workoutlog activity - blank one
 					//  - or -
 					//            workoutlog has url and it matches
 					//  - or -
 					//                                                   workoutlog has activity and it matches
-				id = wol_id;
+				activity = obj;
 				return false; // stops the loop but returns id after
 			}
 		});
 
-		return id;
+		return activity;
 	};
 
 	//
@@ -121,7 +136,6 @@ $(function() {
 
 		// activity
 		var activity = $.hash_get($.globals.label_to_activity, $.globals.garmin.activity, "");
-		var activity_id = $.hash_get($.globals.activity_to_id, activity, "");
 
 		// time
 		var hh_mm_ss = $.globals.garmin.hh_mm_ss;
@@ -133,7 +147,7 @@ $(function() {
 		$($.globals.dialog_text).
 			find("a.logout").click(workoutlog_logout).end().
 			find("textarea[name='Comments_']").val($.globals.garmin.comments).end().
-			find("select[name='WorkoutTypeID_']").val(activity_id).end().
+			find("select[name='WorkoutTypeID_']").val(activity).end().
 			find("select[name='unitsid_']").val(units_id).end().
 			find("input[name='distance_']").val(distance_units.value).end().
 			find("input[name='hours_']").val(hh_mm_ss.hh).end().
@@ -153,34 +167,37 @@ $(function() {
 
 						workoutlog_get_ids().
 							then(function() {
-								var id = find_activity();
-								if (id === "Not Found") {
+								var activity = find_activity();
+								if (activity === "Not Found") {
 									$status.text("Creating Activity on WorkoutLog");
 
 									var garmin_date_string = "{mm}/{dd}/{yy}".format($.globals.garmin.mm_dd_yy);
 									return workoutlog_post(garmin_date_string).
-										then(function(id) {
-											var id = find_activity();
-											if (id === "Not Found") {
+										then(function() {
+											var activity = find_activity();
+											if (activity === "Not Found") {
 												$status.text("Failed to create activity").addClass("error");
 												return $.Deferred().reject({error:true});
 											}
 											else {
-												$status.text("Found {0}".format(id));
-												return id;
+												$status.text("Found {0}".format(activity.id));
+												return activity;
 											}
 										});
 								}
 								else {
-									$status.text("Found {0}".format(id));
-									return id;
+									$status.text("Found {0}".format(activity.id));
+									return activity;
 								}
 							}).
-							then(function(id) {
+							then(function(activity) {
 								// all the data from the form
 								var data = "{0}".format($form.serialize()).
-									replace(/_=/g, "_{0}=".format(id)).
-									replace(/workoutlogid=[&]/, "workoutlogid={0}&".format(id));
+									replace(/WorkoutTypeID_=([^&]+)/, function(str, garmin_activity) {
+										return "WorkoutTypeID_={0}".format($.hash_get(activity.to_id, garmin_activity, ""));
+									}).
+									replace(/_=/g, "_{0}=".format(activity.id)).
+									replace(/workoutlogid=[&]/, "workoutlogid={0}&".format(activity.id));
 
 								return workoutlog_log(data); // primse
 							}).
@@ -299,7 +316,7 @@ $(function() {
 						// login
 						workoutlog_login($(this).find("form").serialize()).
 							then(function() {
-								$.globals.logged_in 
+								$.globals.logged_in
 									? build_dialog()
 									: $status.text("Error: Login Failed.").addClass("error");
 							});
@@ -328,7 +345,7 @@ $(function() {
 		addClass("export").
 		attr("title", "WorkoutLog").
 		text("WorkoutLog").
-		click(function() { 
+		click(function() {
 			open_dialog(); // no params
 		});
 

@@ -11,16 +11,6 @@
 			"m": "1",
 			"steps": "5"
 		},
-		activity_to_id: {
-			"Bike"       : "149931",
-			"CrossTrain" : "150662",
-			"Rest"       : "149936",
-			"Run"        : "149933",
-			"Spin"       : "178280",
-			"Strength"   : "149932",
-			"Stretch"    : "149934",
-			"Swim"       : "149935"
-		},
 		label_to_activity: {
 			// running
 			"Running": "Run",
