@@ -49,7 +49,7 @@
 
 		// Use summary time if no time in time_table
 		if (!time) {
-			time = $("td.summaryTableLabel:first").next("td").text().trim();
+			time = $("td.summaryTableLabel:contains('Time'):first").next("td").text().trim();
 		}
 
 		// use moving time if there
