@@ -36,7 +36,22 @@
 		var garmin_date_string = injectScript(function(){ return BEGIN_TIMESTAMP });
 		var garmin_date = new Date(garmin_date_string);
 
+		var monday_date = new Date(garmin_date_string);
+		if (monday_date.getDay() === 1) {
+			// if monday - go to tuesday
+			monday_date.setDate(monday_date.getDate()+7);
+		}
+		else {
+			// find the next week's monday
+			while (monday_date.getDay() !== 1) {
+				monday_date.setDate(monday_date.getDate()+1);
+			}
+		}
+
 		return {
+			monday_mm: "0{0}".format(monday_date.getMonth()+1).slice(-2),
+			monday_dd: "0{0}".format(monday_date.getDate()).slice(-2),
+			monday_yy: "{0}".format(monday_date.getFullYear()),
 			mm: "0{0}".format(garmin_date.getMonth()+1).slice(-2),
 			dd: "0{0}".format(garmin_date.getDate()).slice(-2),
 			yy: "{0}".format(garmin_date.getFullYear())

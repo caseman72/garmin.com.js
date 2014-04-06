@@ -12,13 +12,26 @@ $(function() {
 	var $print = $.globals.garmin.element;
 	if (!$print.length) return;
 
-	var workoutlog_get_ids = function() {
+	var workoutlog_get_ids = function(monday_date_string) {
+		var params = {
+			"_": new Date().getTime()
+		};
+
+		// if we pass in a date - use the monday - prev to find ids
+		if (monday_date_string) {
+			params = {
+				previous: 1,
+				datWorkoutWeek: monday_date_string,
+				"_": params._ 
+			};
+		}
+
 		return $.ajax({
 				type: "GET",
 				xhrFields: {
 					withCredentials: true
 				},
-				url: "http://173.203.199.228/log/athlete/workoutlog-week.cfm?_={0}".format(new Date().getTime())
+				url: "http://173.203.199.228/log/athlete/workoutlog-week.cfm?{0}".format($.param(params))
 			}).
 			then(function(rsp) {
 				// remove scripts and stop image from loading
@@ -165,7 +178,8 @@ $(function() {
 						var $self = $(this);
 						var $form = $self.find("form");
 
-						workoutlog_get_ids().
+						var monday_date_string = "{monday_mm}/{monday_dd}/{monday_yy}".format($.globals.garmin.mm_dd_yy);
+						workoutlog_get_ids(monday_date_string).
 							then(function() {
 								var activity = find_activity();
 								if (activity === "Not Found") {
@@ -234,7 +248,8 @@ $(function() {
 			data: "adddate={0}&datWorkoutWeek={0}&StartDate={0}&Add.x=24&Add.y=10".format(encodeURIComponent(date_string))
 		}).
 		then(function() {
-			return workoutlog_get_ids();
+			var monday_date_string = "{monday_mm}/{monday_dd}/{monday_yy}".format($.globals.garmin.mm_dd_yy);
+			return workoutlog_get_ids(monday_date_string);
 		});
 	};
 
