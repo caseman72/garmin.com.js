@@ -360,7 +360,9 @@ $(function() {
 		addClass("export").
 		attr("title", "WorkoutLog").
 		text("WorkoutLog").
-		click(function() {
+		off("click").
+		on("click", function(e) {
+			e.preventDefault()
 			open_dialog(); // no params
 		});
 
