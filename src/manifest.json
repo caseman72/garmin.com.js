@@ -15,5 +15,5 @@
    "name": "garmin.com.js",
    "update_url": "https://raw.github.com/caseman72/garmin.com.js/master/update_manifest.xml",
    "permissions": [ "activeTab" ],
-   "version": "0.1.9"
+   "version": "0.1.10"
 }

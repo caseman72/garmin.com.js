@@ -323,6 +323,7 @@ $(function() {
 			appendTo("body").
 			dialog({
 				autoOpen: false,
+				position: ["center", 275],
 				width: 375,
 				buttons: {
 					Login: function() {
@@ -353,20 +354,26 @@ $(function() {
 			dialog("open");
 	};
 
-	// clone the buttons to be added
-	var $clone = $print.clone().
-		removeAttr("onclick").
-		removeClass("print").
-		addClass("export").
-		attr("title", "WorkoutLog").
-		text("WorkoutLog").
-		off("click").
+	// clone the button to be added - the hard way
+	var $clone = $("<li></li>").
+		addClass($print.parent().prop("class") || "").
+		append(
+			// set/get make html from $print anchor
+			$print.
+				clone(false).
+				removeAttr("onclick").
+				removeClass("print").
+				addClass("export").
+				attr("title", "WorkoutLog").
+				text("WorkoutLog").
+				prop("outerHTML")
+		).
 		on("click", function(e) {
 			e.preventDefault()
-			open_dialog(); // no params
+			open_dialog();
 		});
 
 	// add to toolbar
-	$print.parent().parent().append( $clone.wrap("<li></li>") );
+	$print.parent().parent().append( $clone );
 
 });
