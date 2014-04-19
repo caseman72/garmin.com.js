@@ -31,6 +31,7 @@
 		'	<input name="hours_{id}" value="hh" size="2" maxlength="2" onfocus="if(document.f.hours_{id}.value==\'hh\'){document.f.hours_{id}.value=\'\';document.f.hours_{id}.select();}" type="text">&nbsp;:',
 		'	<input name="minutes_{id}" value="mm" size="2" maxlength="2" onfocus="if(document.f.minutes_{id}.value==\'mm\'){document.f.minutes_{id}.value=\'\';document.f.minutes_{id}.select();}" type="text">&nbsp;:',
 		'	<input name="seconds_{id}" value="ss" size="2" maxlength="2" onfocus="if(document.f.seconds_{id}.value==\'ss\'){document.f.seconds_{id}.value=\'\';document.f.seconds_{id}.select();}" type="text">',
+		'	<div style="float:right; margin-top: 5px;"><input id="include_tcx" type="checkbox" /><label for="include_tcx">Upload TCX file</label></div>',
 		'	<br>',
 		'	<br>',
 		' <label>Comments:</label>',

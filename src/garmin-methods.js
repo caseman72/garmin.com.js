@@ -5,9 +5,13 @@
 		var $print = $(".toolbar a.print.button-text");
 
 		if ($print.length) {
-			// remove this for room and what I like
-			$print.parent().parent().find("a.save-to-myconnect.button-text").parent().remove();
+			// go up to 'li'
+			$print = $print.parent();
+
+			// up to 'ul' then remove 'li' for room and what I like
+			$print.parent().find("a.save-to-myconnect.button-text").parent().remove();
 		}
+
 		// this is not in the toolbar but remove anyways
 		$(".facebook-like-button").remove();
 
@@ -89,19 +93,39 @@
 
 	var get_comments = function() {
 		var comment = $("#discriptionValue").text().trim();
-		var url = "{0}".format(window.location.href);
+		return "{0}\n\nLink:\n{1}".format(comment, get_url());
+	};
 
-		return "{0}\n\nLink:\n{1}".format(comment, url);
+	var get_url = function () {
+		return "{0}".format(window.location.href).replace(/#.*$/, "");
+	};
+
+	var get_id = function() {
+		return "{0}".format(window.location.href).replace(/^.*?\/activity\/([0-9]+).*$/, "$1");
+	}
+
+	var get_tcx_file = function() {
+		var garmin_id = get_id();
+
+		return $.ajax({
+			type: "GET",
+			url: "http://connect.garmin.com/proxy/activity-service-1.1/tcx/activity/{0}?full=true".format(garmin_id),
+			dataType: "text"
+		});
+		// then(function(tcx) { });
 	};
 
 	// properties as methods
-	var garmin = {};
+	var garmin = {tcx_data: ""};
+	Object.defineProperty(garmin, "id",       { get: get_id });
+	Object.defineProperty(garmin, "url",      { get: get_url });
 	Object.defineProperty(garmin, "element",  { get: get_element });
 	Object.defineProperty(garmin, "distance", { get: get_distance });
 	Object.defineProperty(garmin, "comments", { get: get_comments });
 	Object.defineProperty(garmin, "activity", { get: get_activity });
 	Object.defineProperty(garmin, "mm_dd_yy", { get: get_date });
 	Object.defineProperty(garmin, "hh_mm_ss", { get: get_time });
+	Object.defineProperty(garmin, "tcx_blob", { get: get_tcx_file });
 
 	/**
 	 * global object to store garmin specific items in
