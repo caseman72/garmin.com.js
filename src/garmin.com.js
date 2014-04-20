@@ -75,7 +75,7 @@ $(function() {
 			dialog({
 				autoOpen: false,
 				width: 475,
-				// position: ["center", 250],
+				position: ["center", 275],
 				buttons: {
 					Log: function() {
 						$status.text("Finding Activity on WorkoutLog").removeClass("error");

@@ -101,7 +101,7 @@
 	};
 
 	var get_id = function() {
-		return "{0}".format(window.location.href).replace(/^.*?\/activity\/([0-9]+).*$/, "$1");
+		return "{0}".format(get_url()).replace(/^.*?activity\/([0-9]+).*$/, "$1");
 	}
 
 	var get_tcx_file = function() {
