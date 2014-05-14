@@ -49,13 +49,13 @@ $(function() {
 						$status.text("Downloaded TCX data. Ready");
 					}
 					else {
-						var log_button = $(".ui-dialog:visible").find(".ui-dialog-buttonpane button:first");
-						log_button.button("disable");
+						var buttons = $(".ui-dialog:visible").find(".ui-dialog-buttonpane button").button("disable");
+
 						$status.text("Downloading TCX data");
 						$.globals.garmin.tcx_blob.
 							then(function(tcx_data) {
 								$.globals.garmin.tcx_data = tcx_data;
-								log_button.button("enable");
+								buttons.button("enable");
 								$status.text("Downloaded TCX data. Ready");
 							});
 					}
@@ -78,6 +78,8 @@ $(function() {
 				position: ["center", 275],
 				buttons: {
 					Log: function() {
+						$(".ui-dialog:visible").find(".ui-dialog-buttonpane button").button("disable");
+
 						$status.text("Finding Activity on WorkoutLog").removeClass("error");
 
 						var $self = $(this);
