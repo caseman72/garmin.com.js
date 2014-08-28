@@ -6,7 +6,7 @@
     "*://connect.garmin.com/*",
     "*://www.workoutlog.com/log/*"
   ],
-  "version": "0.2.3",
+  "version": "0.2.4",
   "name": "garmin.com.js",
   "background": {
     "scripts": [
@@ -17,7 +17,7 @@
     "128": "icon128.png",
     "48": "icon48.png"
   },
-  "description": "A plugin that adds a button to export activities from connect.garmin.com to workouglog.com.\nThe code ported from ~/.js[https://github.com/defunkt/dotjs] and ForceCORS [https://github.com/chrisdeely/ForceCORS]",
+  "description": "A plugin that adds an button to export activities from connect.garmin.com to workoutlog.com.",
   "content_scripts": [
     {
       "run_at": "document_start",
