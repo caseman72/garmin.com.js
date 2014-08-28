@@ -166,8 +166,6 @@
 	}
 
 	function init() {
-
-		console.log( chrome );
 		//when the user updates the settings via the Options page, we need to remove and re-add the listener
 		//especially to update the URL filters
 		if (chrome.webRequest.onHeadersReceived.hasListener(onHeadersReceivedHandler)) {
