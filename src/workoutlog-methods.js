@@ -19,7 +19,7 @@
 				xhrFields: {
 					withCredentials: true
 				},
-				url: "http://173.203.199.228/log/athlete/workoutlog-week.cfm?{0}".format($.param(params))
+				url: "https://www.workoutlog.com/log/athlete/workoutlog-week.cfm?{0}".format($.param(params))
 			}).
 			then(function(rsp) {
 				// remove scripts and stop image from loading
@@ -120,7 +120,7 @@
 			xhrFields: {
 				withCredentials: true
 			},
-			url: "http://173.203.199.228/log/athlete/workoutlog-week.cfm",
+			url: "https://www.workoutlog.com/log/athlete/workoutlog-week.cfm",
 			data: "adddate={0}&datWorkoutWeek={0}&StartDate={0}&Add.x=24&Add.y=10".format(encodeURIComponent(date_string))
 		}).
 		then(function() {
@@ -135,7 +135,7 @@
 			xhrFields: {
 				withCredentials: true
 			},
-			url: "http://173.203.199.228/log/athlete/workoutlog-week.cfm",
+			url: "https://www.workoutlog.com/log/athlete/workoutlog-week.cfm",
 			data: data
 		}).
 		then(function() {
@@ -150,7 +150,7 @@
 			xhrFields: {
 				withCredentials: true
 			},
-			url: "http://173.203.199.228/log/athlete/gpsfiles/selectGarminUploadMethod.cfm?woLogID={0}".format(activity.id)
+			url: "https://www.workoutlog.com/log/athlete/gpsfiles/selectGarminUploadMethod.cfm?woLogID={0}".format(activity.id)
 		}).
 		then(function(/* html */) {
 			var fd = new FormData();
@@ -164,7 +164,7 @@
 				xhrFields: {
 					withCredentials: true
 				},
-				url: "http://173.203.199.228/log/athlete/gpsfiles/uploadFromGarmin.cfm",
+				url: "https://www.workoutlog.com/log/athlete/gpsfiles/uploadFromGarmin.cfm",
 				cache: false,
 				contentType: false,
 				processData: false,
@@ -176,7 +176,7 @@
 
 					// find params in code ... sketchy
 					html.
-						replace(/document\.forms\[0\]\.([^.]+)\.value\s*=\s*(["']?)([\s\S]*?)\2;/g, function(str, key, quote_not_used, value) {
+						replace(/document\.forms\[0\]\.([^.]+)\.value\s*=\s*(["']?)([\s\S]*?)\2;/g, function(str, key, quote_not_used, value) {    // #hack# fix syntax ({{"({({({({ {({
 							params[key] = value;
 							return str;
 						});
@@ -186,7 +186,7 @@
 						xhrFields: {
 							withCredentials: true
 						},
-						url: "http://173.203.199.228/log/athlete/gpsfiles/uploadFromGarmin.cfm?mode=add",
+						url: "https://www.workoutlog.com/log/athlete/gpsfiles/uploadFromGarmin.cfm?mode=add",
 						data: params
 					}).
 					then(function() {
@@ -204,7 +204,7 @@
 			xhrFields: {
 				withCredentials: true
 			},
-			url: "http://173.203.199.228/log/login-confirm.cfm",
+			url: "https://www.workoutlog.com/log/login-confirm.cfm",
 			data: data
 		}).
 		then(function(rsp) {
@@ -230,7 +230,7 @@
 			xhrFields: {
 				withCredentials: true
 			},
-			url: "http://173.203.199.228/log/logout.cfm?_={0}".format(new Date().getTime())
+			url: "https://www.workoutlog.com/log/logout.cfm?_={0}".format(new Date().getTime())
 		}).
 		then(function() {
 			$(".ui-dialog-content").dialog("close");
